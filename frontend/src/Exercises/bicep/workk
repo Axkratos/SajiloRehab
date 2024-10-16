@@ -1,0 +1,68 @@
+// App.js
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
+
+const App = () => {
+    const [isProcessing, setIsProcessing] = useState(false);
+    const [metrics, setMetrics] = useState({ reps: 0, stage: '', form_feedback: '' });
+    const [videoSrc, setVideoSrc] = useState('');
+
+    const startBicep = async () => {
+        try {
+            const response = await axios.post('http://localhost:5000/api/bicep/start');
+            setIsProcessing(true);
+            console.log(response.data.message);
+        } catch (error) {
+            console.error(error.response.data.error);
+        }
+    };
+
+    const stopBicep = async () => {
+        try {
+            const response = await axios.post('http://localhost:5000/api/bicep/stop');
+            setIsProcessing(false);
+            console.log(response.data.message);
+        } catch (error) {
+            console.error(error.response.data.error);
+        }
+    };
+
+    const fetchMetrics = async () => {
+        try {
+            const response = await axios.get('http://localhost:5000/api/bicep/metrics');
+            setMetrics(response.data);
+        } catch (error) {
+            console.error(error.response.data.error);
+        }
+    };
+
+   
+
+    useEffect(() => {
+        if (isProcessing) {
+            setVideoSrc('http://localhost:5000/api/bicep/video_feed');
+        }
+    }, [isProcessing]);
+
+    return (
+        <div style={{ textAlign: 'center' }}>
+            <h1>Bicep Processor</h1>
+            <button onClick={startBicep} disabled={isProcessing}>Start Bicep Processing</button>
+            <button onClick={stopBicep} disabled={!isProcessing}>Stop Bicep Processing</button>
+
+            {isProcessing && (
+                <div>
+                    <h2>Live Video Feed</h2>
+                    <img src={videoSrc} alt="Video Feed" style={{ width: '600px', height: 'auto' }} />
+
+                    <h2>Metrics</h2>
+                    <p>Reps: {metrics.reps}</p>
+                    <p>Stage: {metrics.stage}</p>
+                    <p>Form Feedback: {metrics.form_feedback}</p>
+                </div>
+            )}
+        </div>
+    );
+};
+
+export default App;

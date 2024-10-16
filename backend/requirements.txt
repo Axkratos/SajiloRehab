@@ -1,0 +1,6 @@
+Flask==2.3.2
+Flask-CORS==3.0.10
+g4f==0.3.2.8
+curl-cffi==0.7.2
+opencv-python==4.10.0.84
+mediapipe==0.10.14
