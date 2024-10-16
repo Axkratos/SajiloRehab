@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Chat from './components/Chat';
 import Dashboard from './components/Dashboard';
-import Navbar from './components/Navbar';
+import Navbar from './components/landing/Navbar';
 import Exercise from './components/ExerciseCard';
 import Bicep from './Exercises/bicep/bicep';
 import Login from './components/login';
@@ -13,6 +13,8 @@ import NotFound from './components/notFound';
 
 const App = () => {
   const [exercises, setExercises] = useState('');
+
+  
 
   return (
     <Router>
