@@ -1,7 +1,18 @@
-import video1 from "../../assets/bice.mp4";
-import video2 from "../../assets/run.mp4";
+import { useNavigate } from 'react-router-dom';
+import video1 from "/bice.mp4";
+import video2 from "/run.mp4";
 
 const HeroSection = () => {
+  const navigate = useNavigate(); // useNavigate hook to navigate
+
+  const handleGetStarted = () => {
+    navigate('/signup'); // Redirect to signup page
+  };
+
+  const handleLearnMore = () => {
+    navigate('/about'); // Redirect to about page
+  };
+
   return (
     <div className="flex flex-col items-center mt-6 lg:mt-20">
       <h1 className="text-4xl sm:text-6xl lg:text-7xl text-center tracking-wide">
@@ -14,15 +25,18 @@ const HeroSection = () => {
         Accelerate your rehabilitation with SajiloRehab’s AI-powered solutions. Get personalized exercise plans, real-time feedback, and track your progress every step of the way. Start your recovery journey with us today!
       </p>
       <div className="flex justify-center my-10">
-        <a
-          href="#"
+        <button
+          onClick={handleGetStarted} // Navigate to signup
           className="bg-gradient-to-r from-orange-500 to-orange-800 py-3 px-4 mx-3 rounded-md"
         >
           Get Started for Free
-        </a>
-        <a href="#" className="py-3 px-4 mx-3 rounded-md border">
+        </button>
+        <button
+          onClick={handleLearnMore} // Navigate to about
+          className="py-3 px-4 mx-3 rounded-md border"
+        >
           Learn More
-        </a>
+        </button>
       </div>
       <div className="flex mt-10 justify-center">
         <video

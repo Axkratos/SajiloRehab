@@ -34,6 +34,11 @@ const Chat = () => {
             navigate('/signup'); 
         }
     }, [navigate]); 
+    // Using the Node.js backend URL
+const nodeBackendUrl = import.meta.env.VITE_API_NODE_BACKEND;
+
+// Using the Python backend URL
+const pythonBackendUrl = import.meta.env.VITE_API_PYTHON_BACKEND;
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -44,7 +49,7 @@ const Chat = () => {
 
         while (!validDataReceived) {
             try {
-                const response = await axios.post('http://localhost:5000/api/suggest-exercises', {
+                const response = await axios.post(`${pythonBackendUrl}/api/suggest-exercises`, {
                     message: message,
                     user_id: userId,
                 });
@@ -74,7 +79,7 @@ const Chat = () => {
                 additionalDetails,
             };
 
-            const response = await axios.post('https://noderehab.onrender.com/api/v1/exercises/save-exercises', exerciseData, {
+            const response = await axios.post(`${nodeBackendUrl}/api/v1/exercises/save-exercises`, exerciseData, {
                 headers: {
                     Authorization: `Bearer ${token}`, 
                 },

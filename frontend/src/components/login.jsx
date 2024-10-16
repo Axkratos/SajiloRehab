@@ -12,6 +12,9 @@ const LoginWithGoogleButton = () => {
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
+  // Use the Node.js backend URL from environment variables
+  const nodeBackendUrl = import.meta.env.VITE_API_NODE_BACKEND;
+
   const handleChange = (e) => {
     setFormData({
       ...formData,
@@ -24,7 +27,8 @@ const LoginWithGoogleButton = () => {
     setIsLoading(true);
     setError('');
     try {
-      const response = await axios.post('http://localhost:8000/api/v1/auth/login', formData);
+      // Use the environment variable for the backend URL
+      const response = await axios.post(`${nodeBackendUrl}/api/v1/auth/login`, formData);
       if (response.data.status === 'success') {
         localStorage.setItem('token', response.data.token);
         localStorage.setItem('refreshToken', response.data.refreshToken);

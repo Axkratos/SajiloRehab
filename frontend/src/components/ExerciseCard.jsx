@@ -60,7 +60,10 @@ const ExercisePage = () => {
     const [selectedExercise, setSelectedExercise] = useState(null);
     const [category, setCategory] = useState('All');
     const navigate = useNavigate();
+    const nodeBackendUrl = import.meta.env.VITE_API_NODE_BACKEND;
 
+// Using the Python backend URL
+const pythonBackendUrl = import.meta.env.VITE_API_PYTHON_BACKEND;
     const handleInfoClick = (exercise) => {
         setSelectedExercise(exercise);
         setOpen(true);

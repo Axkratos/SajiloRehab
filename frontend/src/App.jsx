@@ -10,7 +10,7 @@ import Register from './components/register'
 import LandingPage from './components/landingpage';
 import Pricing from './components/landing/Pricing';
 import NotFound from './components/notFound';
-
+import About from './components/about';
 
 const App = () => {
   const [exercises, setExercises] = useState('');
@@ -29,6 +29,7 @@ const App = () => {
         <Route path="/dashboard" element={<Dashboard exercises={exercises} />} />
         <Route path="/exercise" element={<Exercise />} />
         <Route path="/price" element={<Pricing />} />
+        <Route path="/about" element={<About />} />
         <Route path="/exercise/bicep-curls" element={<Bicep />} />
       </Routes>
     </Router>

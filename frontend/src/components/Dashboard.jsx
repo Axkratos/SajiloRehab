@@ -51,19 +51,21 @@ const Dashboard = () => {
     });
 
     const [showDescription, setShowDescription] = useState({});
+    // Using the Node.js backend URL
+const nodeBackendUrl = import.meta.env.VITE_API_NODE_BACKEND;
 
     useEffect(() => {
         const fetchUserData = async () => {
             const token = localStorage.getItem('token');
             try {
-                const profileRes = await axios.get('https://noderehab.onrender.com/api/v1/users/profile', {
+                const profileRes = await axios.get(`${nodeBackendUrl}/api/v1/users/profile`, {
                     headers: { Authorization: `Bearer ${token}` },
                 });
                 if (profileRes.data && profileRes.data.user) {
                     setUserName(profileRes.data.user.fullName);
                 }
 
-                const exercisesRes = await axios.get('https://noderehab.onrender.com/api/v1/exercises/get-exercises', {
+                const exercisesRes = await axios.get(`${nodeBackendUrl}/api/v1/exercises/get-exercises`, {
                     headers: { Authorization: `Bearer ${token}` },
                 });
                 if (exercisesRes.data && exercisesRes.data.exercises) {

@@ -13,7 +13,7 @@ const Signup = () => {
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
-
+  const nodeBackendUrl = import.meta.env.VITE_API_NODE_BACKEND;
   const handleChange = (e) => {
     setFormData({
       ...formData,
@@ -26,7 +26,7 @@ const Signup = () => {
     setIsLoading(true);
     setError('');
     try {
-      const response = await axios.post('https://noderehab.onrender.com/api/v1/auth/signup', formData);
+      const response = await axios.post(`${nodeBackendUrl}/api/v1/auth/signup`, formData);
       if (response.data.status === 'success') {
         navigate('/login');
       }

@@ -1,7 +1,16 @@
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { CheckCircle2 } from "lucide-react";
 import { pricingOptions } from "../../constants";
 
 const Pricing = () => {
+  const navigate = useNavigate();
+
+  const handleSubscribe = () => {
+    // Redirect to the login page when the Subscribe button is clicked
+    navigate('/login');
+  };
+
   return (
     <div className="mt-20">
       <h2 className="text-3xl sm:text-5xl lg:text-6xl text-center my-8 tracking-wide">
@@ -31,12 +40,12 @@ const Pricing = () => {
                   </li>
                 ))}
               </ul>
-              <a
-                href="#"
+              <button
+                onClick={handleSubscribe} // Handle the subscribe button click
                 className="inline-flex justify-center items-center text-center w-full h-12 p-5 mt-20 tracking-tight text-xl hover:bg-orange-900 border border-orange-900 rounded-lg transition duration-200"
               >
                 Subscribe
-              </a>
+              </button>
             </div>
           </div>
         ))}

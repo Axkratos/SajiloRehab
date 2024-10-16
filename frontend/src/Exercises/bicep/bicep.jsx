@@ -18,6 +18,13 @@ const ExercisePose = () => {
   const [lastFeedbackTime, setLastFeedbackTime] = useState(0); // To track last feedback time
   const lastFeedbackTimeRef = useRef(Date.now()); // Using ref instead of state
 
+
+  // Using the Node.js backend URL
+const nodeBackendUrl = import.meta.env.VITE_API_NODE_BACKEND;
+
+// Using the Python backend URL
+const pythonBackendUrl = import.meta.env.VITE_API_PYTHON_BACKEND;
+
   useEffect(() => {
     let cameraInstance;
     let timerInterval;
@@ -145,7 +152,7 @@ const calculateExercise = async (results) => {
 
   const sendFeedbackData = async (angleData) => {
     try {
-      const response = await axios.post('http://localhost:8000/api/get_feedback', angleData);
+      const response = await axios.post(`${nodeBackendUrl}/api/get_feedback`, angleData);
       setFeedback(response.data.feedback);
     } catch (error) {
       console.error('Error sending feedback data:', error);
@@ -154,7 +161,7 @@ const calculateExercise = async (results) => {
 
   const sendRepData = async (currentAngle) => {
     try {
-      const response = await axios.post('http://localhost:5000/api/count_reps', {
+      const response = await axios.post(`${pythonBackendUrl}/api/count_reps`, {
         angle: currentAngle,  // Send the angle for counting reps
       });
       setRepCount(response.data.reps); // Update rep count from response
@@ -215,7 +222,7 @@ const calculateExercise = async (results) => {
     setRepCount(0);
     setFeedback("Get ready to start!");
     // Hit the start API to reset the counter and allow counting to restart
-      const response = axios.post('http://localhost:5000/start');
+      const response = axios.post(`${pythonBackendUrl}/api/start`);
       console.log(response.data.message); // Log the message from the API response
   };
 
@@ -231,7 +238,7 @@ const calculateExercise = async (results) => {
   
     // Hit the stop API to stop the rep counter and reset the counter
     try {
-      const response = await axios.post('http://localhost:5000/stop');
+      const response = await axios.post(`${pythonBackendUrl}/api/stop`);
       console.log(response.data.message); // Log the message from the API response
     } catch (error) {
       console.error('Error stopping the rep counter:', error);
@@ -245,7 +252,7 @@ const calculateExercise = async (results) => {
   
     // Hit the pause or resume API based on the new state
     try {
-      const apiEndpoint = newPauseState ? 'http://localhost:5000/pause' : 'http://localhost:5000/resume';
+      const apiEndpoint = newPauseState ? `${pythonBackendUrl}/api/pause` : `${pythonBackendUrl}/api/resume`;
       const response = await axios.post(apiEndpoint);
       console.log(response.data.message); // Log the message from the API response
   
