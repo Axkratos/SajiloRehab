@@ -4,8 +4,6 @@ import {
     TextField,
     Button,
     Typography,
-    Container,
-    Paper,
     CircularProgress,
     Card,
     CardContent,
@@ -31,11 +29,11 @@ const Chat = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
-        const token = localStorage.getItem('token'); // Check for token in localStorage
+        const token = localStorage.getItem('token'); 
         if (!token) {
-            navigate('/signup'); // Navigate to signup if token is not found
+            navigate('/signup'); 
         }
-    }, [navigate]); // Empty dependency array ensures this runs on mount
+    }, [navigate]); 
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -50,12 +48,10 @@ const Chat = () => {
                     message: message,
                     user_id: userId,
                 });
-                console.log(response);
                 if (response.data.exercises && response.data.exercises.length > 0) {
                     setExercises(response.data.exercises);
                     validDataReceived = true;
                 } else {
-                    console.log('Received empty data, retrying...');
                     await new Promise(resolve => setTimeout(resolve, 2000));
                 }
             } catch (error) {
@@ -84,7 +80,6 @@ const Chat = () => {
                 },
             });
 
-            console.log(response.data.message);
             navigate('/dashboard', { state: { exercises, injuryType, injuryDuration, injurySeverity } });
         } catch (error) {
             console.error('Error saving exercises:', error);
@@ -100,111 +95,200 @@ const Chat = () => {
     };
 
     return (
-        <Container>
-            <Paper style={{ padding: '20px', marginTop: '20px' }}>
-                <Typography variant="h4" gutterBottom>
-                    Exercise Suggestor
-                </Typography>
-
-                <Divider style={{ margin: '10px 0' }} />
-
-                <form onSubmit={handleSubmit}>
-                    <div style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
-                        <HealingIcon style={{ marginRight: '10px' }} />
-                        <TextField
-                            fullWidth
-                            label="Type of Injury (e.g., sprained ankle)"
-                            value={injuryType}
-                            onChange={(e) => setInjuryType(e.target.value)}
-                            variant="outlined"
-                            required
-                        />
-                    </div>
-
-                    <div style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
-                        <TimelapseIcon style={{ marginRight: '10px' }} />
-                        <TextField
-                            fullWidth
-                            label="Duration (e.g., 1 week)"
-                            value={injuryDuration}
-                            onChange={(e) => setInjuryDuration(e.target.value)}
-                            variant="outlined"
-                            required
-                        />
-                    </div>
-
-                    <div style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
-                        <SpeedIcon style={{ marginRight: '10px' }} />
-                        <TextField
-                            fullWidth
-                            label="Severity (e.g., mild, moderate, severe)"
-                            value={injurySeverity}
-                            onChange={(e) => setInjurySeverity(e.target.value)}
-                            variant="outlined"
-                            required
-                        />
-                    </div>
-
-                    <div style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
-                        <NotesIcon style={{ marginRight: '10px' }} />
-                        <TextField
-                            fullWidth
-                            multiline
-                            rows={4}
-                            label="Additional Details"
-                            value={additionalDetails}
-                            onChange={(e) => setAdditionalDetails(e.target.value)}
-                            variant="outlined"
-                        />
-                    </div>
-
-                    <Button type="submit" variant="contained" color="primary" startIcon={<FitnessCenterIcon />}>
-                        Get Exercise Suggestions
-                    </Button>
-                </form>
-
-                {loading && (
-                    <div style={{ marginTop: '20px', textAlign: 'center' }}>
-                        <CircularProgress />
-                        <Typography>Analyzing...</Typography>
-                    </div>
-                )}
-
-                {!loading && exercises.length > 0 && (
-                    <div style={{ marginTop: '20px' }}>
-                        <Typography variant="h6">Recommended Exercises:</Typography>
-                        {exercises.map((exercise) => (
-                            <Card key={exercise.name} style={{ marginTop: '10px' }}>
-                                <CardContent>
-                                    <Typography variant="h6" color="textSecondary">
-                                        {exercise.name}
-                                    </Typography>
-                                    <Typography>{exercise.description}</Typography>
-                                </CardContent>
-                            </Card>
-                        ))}
-                        <div style={{ marginTop: '20px', display: 'flex', justifyContent: 'space-between' }}>
-                            <Button 
-                                variant="contained" 
-                                color="primary" 
-                                onClick={handleAccept} 
-                                startIcon={<CheckCircleIcon />}
-                            >
-                                Accept Exercises
-                            </Button>
-                            <Button 
-                                variant="outlined" 
-                                color="secondary" 
-                                onClick={handleReject} 
-                                startIcon={<CancelIcon />}
-                            >
-                                Reject Exercises
-                            </Button>
+        <div className="min-h-screen bg-black text-white">
+            <div className="container mx-auto mt-12 px-4">
+                <div className="bg-gray-900 rounded-lg p-8 shadow-xl relative">
+                    <div className="flex items-center space-x-3 mb-6">
+                        <div className="bg-orange-500 text-black rounded-full p-3 flex-shrink-0">
+                            <FitnessCenterIcon className="h-8 w-8" />
+                        </div>
+                        <div>
+                            <Typography variant="h4" className="font-bold">
+                                AI Exercise Suggestor
+                            </Typography>
+                            <Typography className="text-gray-400 text-sm">
+                                Your personalized AI-powered exercise guide.
+                            </Typography>
                         </div>
                     </div>
-                )}
-            </Paper>
-        </Container>
+
+                    <Divider className="mb-6 bg-orange-500" />
+
+                    <form onSubmit={handleSubmit} className="space-y-6">
+                        <div className="flex items-center space-x-3">
+                            <HealingIcon className="text-orange-400" />
+                            <TextField
+                                fullWidth
+                                label="Type of Injury (e.g., sprained ankle)"
+                                value={injuryType}
+                                onChange={(e) => setInjuryType(e.target.value)}
+                                variant="outlined"
+                                required
+                                InputLabelProps={{ style: { color: '#FFA500' } }}  // Make the label light orange
+                                sx={{
+                                    '& .MuiOutlinedInput-root': {
+                                        color: 'white', 
+                                        '& fieldset': {
+                                            borderColor: '#FFA500', // Light orange border
+                                        },
+                                        '&:hover fieldset': {
+                                            borderColor: '#FFA500', // On hover
+                                        },
+                                        '&.Mui-focused fieldset': {
+                                            borderColor: '#FFA500', // On focus
+                                        },
+                                    }
+                                }}
+                                className="bg-gray-800 text-white"
+                            />
+                        </div>
+
+                        <div className="flex items-center space-x-3">
+                            <TimelapseIcon className="text-orange-400" />
+                            <TextField
+                                fullWidth
+                                label="Duration (e.g., 1 week)"
+                                value={injuryDuration}
+                                onChange={(e) => setInjuryDuration(e.target.value)}
+                                variant="outlined"
+                                required
+                                InputLabelProps={{ style: { color: '#FFA500' } }}  // Make the label light orange
+                                sx={{
+                                    '& .MuiOutlinedInput-root': {
+                                        color: 'white', 
+                                        '& fieldset': {
+                                            borderColor: '#FFA500', // Light orange border
+                                        },
+                                        '&:hover fieldset': {
+                                            borderColor: '#FFA500', // On hover
+                                        },
+                                        '&.Mui-focused fieldset': {
+                                            borderColor: '#FFA500', // On focus
+                                        },
+                                    }
+                                }}
+                                className="bg-gray-800 text-white"
+                            />
+                        </div>
+
+                        <div className="flex items-center space-x-3">
+                            <SpeedIcon className="text-orange-400" />
+                            <TextField
+                                fullWidth
+                                label="Severity (e.g., mild, moderate, severe)"
+                                value={injurySeverity}
+                                onChange={(e) => setInjurySeverity(e.target.value)}
+                                variant="outlined"
+                                required
+                                InputLabelProps={{ style: { color: '#FFA500' } }}  // Make the label light orange
+                                sx={{
+                                    '& .MuiOutlinedInput-root': {
+                                        color: 'white', 
+                                        '& fieldset': {
+                                            borderColor: '#FFA500', // Light orange border
+                                        },
+                                        '&:hover fieldset': {
+                                            borderColor: '#FFA500', // On hover
+                                        },
+                                        '&.Mui-focused fieldset': {
+                                            borderColor: '#FFA500', // On focus
+                                        },
+                                    }
+                                }}
+                                className="bg-gray-800 text-white"
+                            />
+                        </div>
+
+                        <div className="flex items-center space-x-3">
+                            <NotesIcon className="text-orange-400" />
+                            <TextField
+                                fullWidth
+                                multiline
+                                rows={4}
+                                label="Additional Details"
+                                value={additionalDetails}
+                                onChange={(e) => setAdditionalDetails(e.target.value)}
+                                variant="outlined"
+                                InputLabelProps={{ style: { color: '#FFA500' } }}  // Make the label light orange
+                                sx={{
+                                    '& .MuiOutlinedInput-root': {
+                                        color: 'white', 
+                                        '& fieldset': {
+                                            borderColor: '#FFA500', // Light orange border
+                                        },
+                                        '&:hover fieldset': {
+                                            borderColor: '#FFA500', // On hover
+                                        },
+                                        '&.Mui-focused fieldset': {
+                                            borderColor: '#FFA500', // On focus
+                                        },
+                                    }
+                                }}
+                                className="bg-gray-800 text-white"
+                            />
+                        </div>
+
+                        <Button
+                            type="submit"
+                            variant="contained"
+                            color="primary"
+                            startIcon={<FitnessCenterIcon />}
+                            className="w-full py-3 bg-orange-500 hover:bg-orange-600 transition-all duration-300"
+                        >
+                            Get Exercise Suggestions
+                        </Button>
+                    </form>
+
+                    {loading && (
+                        <div className="mt-6 flex justify-center items-center">
+                            <CircularProgress className="text-white" />
+                            <Typography className="ml-4 text-white">Analyzing...</Typography>
+                        </div>
+                    )}
+
+                    {!loading && exercises.length > 0 && (
+                        <div className="mt-6">
+                            <Typography variant="h6" className="mb-4">Recommended Exercises:</Typography>
+                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                                {exercises.map((exercise, index) => (
+                                    <Card
+                                        key={index}
+                                        className="bg-gray-800 text-white p-4 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300"
+                                    >
+                                        <CardContent>
+                                            <Typography variant="h6" className="font-bold">
+                                                {exercise.name}
+                                            </Typography>
+                                            <Typography className="mt-2">{exercise.description}</Typography>
+                                        </CardContent>
+                                    </Card>
+                                ))}
+                            </div>
+                            <div className="mt-6 flex justify-between">
+                                <Button
+                                    variant="contained"
+                                    color="primary"
+                                    onClick={handleAccept}
+                                    startIcon={<CheckCircleIcon />}
+                                    className="bg-green-600 hover:bg-green-700 transition-all duration-300"
+                                >
+                                    Accept Exercises
+                                </Button>
+                                <Button
+                                    variant="outlined"
+                                    color="secondary"
+                                    onClick={handleReject}
+                                    startIcon={<CancelIcon />}
+                                    className="border-red-600 text-red-600 hover:bg-red-600 hover:text-white transition-all duration-300"
+                                >
+                                    Reject Exercises
+                                </Button>
+                            </div>
+                        </div>
+                    )}
+                </div>
+            </div>
+        </div>
     );
 };
 

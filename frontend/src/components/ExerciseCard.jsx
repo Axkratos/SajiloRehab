@@ -58,7 +58,7 @@ const exercises = {
 const ExercisePage = () => {
     const [open, setOpen] = useState(false);
     const [selectedExercise, setSelectedExercise] = useState(null);
-    const [category, setCategory] = useState('All'); // Default to showing all exercises
+    const [category, setCategory] = useState('All');
     const navigate = useNavigate();
 
     const handleInfoClick = (exercise) => {
@@ -80,25 +80,36 @@ const ExercisePage = () => {
         setCategory(event.target.value);
     };
 
-    // Filter exercises based on selected category
     const filteredExercises = Object.keys(exercises).filter((exercise) => {
         if (category === 'All') return true;
-        // Example category filter, you can add more logic for filtering by category
         if (category === 'Strength' && ['Push-ups', 'Squats', 'Lunges', 'Plank'].includes(exercise)) return true;
         if (category === 'Flexibility' && ['Hamstring Stretch', 'Spinal Twist', 'Pigeon Pose'].includes(exercise)) return true;
         return false;
     });
 
     return (
-        <Container style={{ marginTop: '20px', padding: '20px', backgroundColor: '#e8f0fe', borderRadius: '10px' }}>
-            <Typography variant="h4" align="center" style={{ marginBottom: '20px', color: '#34495e' }}>
-                Exercise Guide
+        <Container sx={{ mt: 4, py: 4, borderRadius: 2, bgcolor: '#121212', color: '#fff' }}>
+            <Typography
+                variant="h4"
+                align="center"
+                sx={{ mb: 4, color: '#fff', fontWeight: 'bold' }}
+            >
+                SajiloRehab Exercise Guide
             </Typography>
 
             {/* Filter by Category */}
-            <FormControl variant="outlined" fullWidth style={{ marginBottom: '20px' }}>
-                <InputLabel>Filter by Category</InputLabel>
-                <Select value={category} onChange={handleCategoryChange} label="Filter by Category">
+            <FormControl variant="outlined" fullWidth sx={{ mb: 4 }}>
+                <InputLabel sx={{ color: '#fff' }}>Filter by Category</InputLabel>
+                <Select
+                    value={category}
+                    onChange={handleCategoryChange}
+                    label="Filter by Category"
+                    sx={{
+                        color: '#fff',
+                        '& .MuiOutlinedInput-notchedOutline': { borderColor: '#fff' },
+                        '&:hover .MuiOutlinedInput-notchedOutline': { borderColor: '#2980b9' },
+                    }}
+                >
                     <MenuItem value="All">All</MenuItem>
                     <MenuItem value="Strength">Strength</MenuItem>
                     <MenuItem value="Flexibility">Flexibility</MenuItem>
@@ -110,34 +121,38 @@ const ExercisePage = () => {
                 {filteredExercises.map((exercise, index) => (
                     <Grid item xs={6} sm={4} md={3} key={index}>
                         <Card
-                            style={{
+                            sx={{
                                 cursor: 'pointer',
-                                backgroundColor: '#f0f4ff',
-                                borderRadius: '10px',
-                                boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
+                                bgcolor: '#1f1f1f',
+                                borderRadius: 2,
+                                boxShadow: '0 4px 12px rgba(0, 0, 0, 0.5)',
                                 textAlign: 'center',
                                 transition: 'transform 0.2s',
+                                '&:hover': { transform: 'scale(1.05)' },
                             }}
-                            onMouseEnter={(e) => { e.currentTarget.style.transform = 'scale(1.05)'; }}
-                            onMouseLeave={(e) => { e.currentTarget.style.transform = 'scale(1)'; }}
-                            onClick={() => handleExerciseClick(exercise)} // Navigate on card click
+                            onClick={() => handleExerciseClick(exercise)}
                         >
                             <CardContent>
-                                <Typography variant="h6" style={{ color: '#34495e', fontWeight: 'bold' }}>
+                                <Typography
+                                    variant="h6"
+                                    sx={{ color: '#fff', fontWeight: 'bold' }}
+                                >
                                     {exercise}
                                 </Typography>
-                                <Typography variant="body2" style={{ color: '#7f8c8d', marginTop: '8px' }}>
-                                    {exercises[exercise]} {/* Description here */}
+                                <Typography variant="body2" sx={{ color: '#b0bec5', mt: 1 }}>
+                                    {exercises[exercise]}
                                 </Typography>
                                 <Box display="flex" justifyContent="center" mt={2}>
-                                    <IconButton onClick={(e) => {
-                                        e.stopPropagation();
-                                        handleInfoClick({ name: exercise, description: exercises[exercise] });
-                                    }}>
-                                        <InfoIcon style={{ color: '#2980b9' }} />
+                                    <IconButton
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            handleInfoClick({ name: exercise, description: exercises[exercise] });
+                                        }}
+                                    >
+                                        <InfoIcon sx={{ color: '#3498db' }} />
                                     </IconButton>
                                     <IconButton onClick={() => handleExerciseClick(exercise)}>
-                                        <YouTubeIcon style={{ color: '#e74c3c' }} />
+                                        <YouTubeIcon sx={{ color: '#e74c3c' }} />
                                     </IconButton>
                                 </Box>
                             </CardContent>
@@ -148,14 +163,14 @@ const ExercisePage = () => {
 
             {/* Modal for Exercise Description */}
             <Dialog open={open} onClose={handleClose} maxWidth="sm" fullWidth>
-                <DialogTitle>{selectedExercise?.name} - Description</DialogTitle>
-                <DialogContent>
-                    <Typography variant="body1" style={{ color: '#34495e' }}>
+                <DialogTitle sx={{ bgcolor: '#2c3e50', color: '#fff' }}>{selectedExercise?.name} - Description</DialogTitle>
+                <DialogContent sx={{ bgcolor: '#2c3e50' }}>
+                    <Typography variant="body1" sx={{ color: '#fff' }}>
                         {selectedExercise ? selectedExercise.description : ''}
                     </Typography>
                 </DialogContent>
-                <DialogActions>
-                    <Button onClick={handleClose} color="primary">
+                <DialogActions sx={{ bgcolor: '#2c3e50' }}>
+                    <Button onClick={handleClose} sx={{ color: '#2980b9' }}>
                         Close
                     </Button>
                 </DialogActions>

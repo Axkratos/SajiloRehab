@@ -1,5 +1,5 @@
 import { CheckCircle, FitnessCenter, Healing, Timer } from "@mui/icons-material";
-import rehabImg from "../../assets/code.jpg"; // Assuming you have a suitable image for rehabilitation
+import rehabImg from "../../assets/bb.webp"; // Assuming you have a suitable image for rehabilitation
 import { checklistItems } from "../../constants";
 
 const Workflow = () => {

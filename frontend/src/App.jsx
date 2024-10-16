@@ -8,6 +8,7 @@ import Bicep from './Exercises/bicep/bicep';
 import Login from './components/login';
 import Register from './components/register'
 import LandingPage from './components/landingpage';
+import Pricing from './components/landing/Pricing';
 import NotFound from './components/notFound';
 
 
@@ -27,6 +28,7 @@ const App = () => {
         <Route path="/signup" element={<Register />} />
         <Route path="/dashboard" element={<Dashboard exercises={exercises} />} />
         <Route path="/exercise" element={<Exercise />} />
+        <Route path="/price" element={<Pricing />} />
         <Route path="/exercise/bicep-curls" element={<Bicep />} />
       </Routes>
     </Router>
