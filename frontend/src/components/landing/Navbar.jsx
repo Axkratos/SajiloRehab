@@ -159,59 +159,73 @@ const ResponsiveNavbar = () => {
         </Box>
       </Toolbar>
 
+      
       {/* Mobile Navigation Drawer */}
-      {mobileDrawerOpen && (
-        <Box
-          sx={{
-            position: 'absolute',
-            top: 60,
-            left: 0,
-            width: '100%',
-            backgroundColor: 'rgba(0, 0, 0, 0.9)',
-            zIndex: 999,
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            p: 3,
-          }}
-        >
-          {menuItems.map(({ label, path }, index) => (
-            <Button
-              key={index}
-              onClick={() => { navigate(path); toggleNavbar(); }}
-              sx={{ 
-                color: 'white',
-                my: 2,
-                '&:hover': {
-                  backgroundColor: 'rgba(255, 255, 255, 0.1)',
-                }
-              }}
-            >
-              {label}
-            </Button>
-          ))}
-          <Box sx={{ display: 'flex', mt: 2 }}>
-            <Button 
-              onClick={() => navigate('/login')} 
-              sx={{ color: 'white', mr: 2 }}
-            >
-              Sign In
-            </Button>
-            <Button 
-              onClick={() => navigate('/signup')} 
-              sx={{ 
-                background: 'linear-gradient(to right, rgba(255, 87, 34, 1), rgba(255, 138, 101, 1))',
-                color: 'white',
-                '&:hover': {
-                  background: 'rgba(255, 138, 101, 0.8)',
-                }
-              }}
-            >
-              Sign Up
-            </Button>
-          </Box>
-        </Box>
+{mobileDrawerOpen && (
+  <Box
+    sx={{
+      position: 'absolute',
+      top: 60,
+      left: 0,
+      width: '100%',
+      backgroundColor: 'rgba(0, 0, 0, 0.9)',
+      zIndex: 999,
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      p: 3,
+    }}
+  >
+    {menuItems.map(({ label, path }, index) => (
+      <Button
+        key={index}
+        onClick={() => { navigate(path); toggleNavbar(); }}
+        sx={{ 
+          color: 'white',
+          my: 2,
+          '&:hover': {
+            backgroundColor: 'rgba(255, 255, 255, 0.1)',
+          }
+        }}
+      >
+        {label}
+      </Button>
+    ))}
+
+    {/* Show Avatar if signed in, otherwise show Sign In / Sign Up buttons */}
+    <Box sx={{ display: 'flex', mt: 2 }}>
+      {accessToken ? (
+        <Tooltip title="Open settings">
+          <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+            <Avatar alt="User Avatar" src="/2.png" />
+          </IconButton>
+        </Tooltip>
+      ) : (
+        <>
+          <Button 
+            onClick={() => { navigate('/login'); toggleNavbar(); }} 
+            sx={{ color: 'white', mr: 2 }}
+          >
+            Sign In
+          </Button>
+          <Button 
+            onClick={() => { navigate('/signup'); toggleNavbar(); }} 
+            sx={{ 
+              background: 'linear-gradient(to right, rgba(255, 87, 34, 1), rgba(255, 138, 101, 1))',
+              color: 'white',
+              '&:hover': {
+                background: 'rgba(255, 138, 101, 0.8)',
+              }
+            }}
+          >
+            Get Started
+          </Button>
+        </>
       )}
+    </Box>
+  </Box>
+)}
+
     </AppBar>
   );
 };

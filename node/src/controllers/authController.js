@@ -1,13 +1,13 @@
 import User from '../models/userModel.js';
 import jwt from 'jsonwebtoken';
 
-const signToken = (id) => {
+export const signToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET, {
     expiresIn: process.env.JWT_EXPIRES_IN
   });
 };
 
-const signRefreshToken = (id) => {
+export const signRefreshToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_REFRESH_SECRET, {
     expiresIn: process.env.JWT_REFRESH_EXPIRES_IN
   });
@@ -53,7 +53,7 @@ export const login = async (req, res) => {
   });
   res.status(200).json({ status: 'success', token, refreshToken,role: user.role });
 };
-const durationToMilliseconds = (duration) => {
+export const durationToMilliseconds = (duration) => {
   const match = duration.match(/^(\d+)([dhms])$/);
   if (!match) {
     throw new Error(`Invalid duration format: ${duration}`);

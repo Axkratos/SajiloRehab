@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Container, Typography, Button, Box } from '@mui/material';
-
+import im from '/404.jpg'
 const NotFound = () => {
     return (
         <Container
@@ -17,7 +17,7 @@ const NotFound = () => {
             {/* Optional: Add an illustration or image for visual appeal */}
             <Box
                 component="img"
-                src="https://source.unsplash.com/featured/?fitness" // You can replace this with an illustration
+                src={im}// You can replace this with an illustration
                 alt="Page Not Found"
                 sx={{
                     width: '100%',

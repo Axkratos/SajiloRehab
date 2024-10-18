@@ -53,6 +53,9 @@ exercise_details = {
 @app.route('/')
 def home():
     return "This is the API for Sajilorehab"
+@app.route('/wake-up', methods=['GET'])
+def wake_up():
+    return "Python backend is awake!"
 
 @app.route('/api/suggest-exercises', methods=['POST'])
 def suggest_exercises():

@@ -3,13 +3,19 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 import path from "path";
 import { fileURLToPath } from "url";
-
+import passport from "passport";
 import exerciseRoutes from "./routes/exerciseRoute.js";
 import userRoutes from "./routes/userRoute.js";
 import authRoutes from "./routes/authRoute.js";
-
+import { signToken,signRefreshToken,durationToMilliseconds } from "./controllers/authController.js"; // Import signToken function
+import { initializePassport } from './config/passport.js'; // Import your passport configuration
+import googleAuthRoutes from './routes/googleRoute.js'; // Import your Google OAuth routes
 // Initialize Express app
 const app = express();
+
+
+
+
 
 // __dirname replacement in ES modules
 const __filename = fileURLToPath(import.meta.url);
@@ -38,11 +44,54 @@ app.use("/public", express.static(path.join(__dirname, "../public")));
 app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/users", userRoutes);
 app.use("/api/v1/exercises", exerciseRoutes);
+app.use('/api/v1/auth', googleAuthRoutes); // Mount your routes on /api/v1/auth
 
 // Root route
 app.get("/", (req, res) => {
   res.status(200).json({ message: "This contains API for sajilorehab" });
 });
+
+
+app.get('/wake-up', (req, res) => {
+  res.send('Node.js backend is awake!');
+});
+// // Initialize passport middleware
+// app.use(passport.initialize());
+
+
+
+// // Initialize Passport strategies and configuration
+// initializePassport(passport); // Set up Google Strategy and serialize/deserialize
+
+
+// // Google OAuth login route
+// app.get('/api/v1/auth/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
+
+// // Google OAuth callback route
+// app.get('/api/v1/auth/google/callback', passport.authenticate('google', { session: false }), async (req, res) => {
+//   if (!req.user) {
+//     return res.status(401).json({ message: 'User not authenticated' });
+//   }
+
+//   try {
+//     // Generate tokens
+//     const accessToken = signToken(req.user._id);
+//     const refreshToken = signRefreshToken(req.user._id);
+
+//     // Send tokens back in response body
+//     return res.status(200).json({
+//       message: 'User authenticated successfully',
+//       accessToken,
+//       refreshToken,
+//     });
+//   } catch (error) {
+//     console.error('Error in Google callback:', error);
+//     return res.status(500).json({ message: 'Internal server error' });
+//   }
+// });
+
+
+
 
 // Integrate g4f for AI-based feedback generation
 import { G4F } from "g4f";

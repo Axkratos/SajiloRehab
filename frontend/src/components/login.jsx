@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import axios from 'axios';
+import { useGoogleLogin } from "@react-oauth/google";
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import bbImage from '/cc.jpg';
 
 const LoginWithGoogleButton = () => {
@@ -41,6 +42,38 @@ const LoginWithGoogleButton = () => {
     }
   };
 
+  // Google login logic
+  const responseGoogle = async (authResult) => {
+    try {
+      if (authResult.code) {
+        // Send the authorization code to the backend to exchange for tokens
+        const result = await axios.get(`${nodeBackendUrl}/api/v1/auth/google/callback`, {
+          params: { code: authResult.code }, // Pass the authorization code in query params
+        });
+
+        const { accessToken, refreshToken } = result.data;
+
+        // Store tokens in localStorage or sessionStorage
+        localStorage.setItem('token', accessToken);
+        localStorage.setItem('refreshToken', refreshToken);
+
+        // Redirect to dashboard or any protected page
+        navigate('/dashboard');
+      } else {
+        throw new Error('Google login failed');
+      }
+    } catch (e) {
+      console.error('Error during Google login:', e);
+    }
+  };
+
+  // Google login button handler
+  const googleLogin = useGoogleLogin({
+    onSuccess: responseGoogle,
+    onError: responseGoogle,
+    flow: "auth-code",
+  });
+
   return (
     <div className="flex items-center justify-center h-screen w-full px-5 sm:px-0">
       <div className="flex bg-white rounded-lg shadow-lg border overflow-hidden max-w-sm lg:max-w-4xl w-full">
@@ -69,7 +102,7 @@ const LoginWithGoogleButton = () => {
                 type="email"
                 value={formData.email}
                 onChange={handleChange}
-                className="text-gray-700 bg-gray-100 border border-gray-300 rounded py-2 px-4 block w-full focus:outline-2 focus:outline-blue-700 placeholder-black" // Updated classes
+                className="text-gray-700 bg-gray-100 border border-gray-300 rounded py-2 px-4 block w-full focus:outline-2 focus:outline-blue-700 placeholder-black" 
                 placeholder="Enter your email"
                 required
               />
@@ -85,7 +118,7 @@ const LoginWithGoogleButton = () => {
                 type="password"
                 value={formData.password}
                 onChange={handleChange}
-                className="text-gray-700 bg-gray-100 border border-gray-300 rounded py-2 px-4 block w-full focus:outline-2 focus:outline-blue-700 placeholder-black" // Updated classes
+                className="text-gray-700 bg-gray-100 border border-gray-300 rounded py-2 px-4 block w-full focus:outline-2 focus:outline-blue-700 placeholder-black" 
                 placeholder="Enter your password"
                 required
               />
@@ -108,9 +141,9 @@ const LoginWithGoogleButton = () => {
           </form>
 
           {/* Google Login Button */}
-          <a
-            href="#"
-            className="flex items-center justify-center mt-4 text-white rounded-lg shadow-md hover:bg-gray-100"
+          <div
+            className="flex items-center justify-center mt-4 text-white rounded-lg shadow-md hover:bg-gray-100 cursor-pointer"
+            onClick={googleLogin}
           >
             <div className="flex px-5 justify-center w-full py-3">
               <div className="min-w-[30px]">
@@ -139,7 +172,7 @@ const LoginWithGoogleButton = () => {
                 </h1>
               </div>
             </div>
-          </a>
+          </div>
 
           {/* Sign up link */}
           <div className="mt-4 flex items-center w-full text-center">

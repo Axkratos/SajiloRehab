@@ -3,7 +3,7 @@ import { Pose } from "@mediapipe/pose";
 import * as cam from "@mediapipe/camera_utils";
 import axios from 'axios';
 import { Container, Typography, Box, Button, Grid, Card, CardMedia, Paper, CardContent } from "@mui/material";
-import bicep from "./bicep.mp4";
+import bicep from "/bicep.mp4";
 import throttle from 'lodash.throttle';
 
 const ExercisePose = () => {
@@ -25,68 +25,112 @@ const nodeBackendUrl = import.meta.env.VITE_API_NODE_BACKEND;
 // Using the Python backend URL
 const pythonBackendUrl = import.meta.env.VITE_API_PYTHON_BACKEND;
 
-  useEffect(() => {
-    let cameraInstance;
-    let timerInterval;
+useEffect(() => {
+  let cameraInstance;
+  let timerInterval;
 
-    const pose = new Pose({
-      locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/pose/${file}`,
-    });
+  const loadPoseLibrary = async () => {
+    try {
+      // Load the Mediapipe Pose library using a script tag
+      const poseScript = document.createElement("script");
+      poseScript.src = "https://cdn.jsdelivr.net/npm/@mediapipe/pose/pose.js";
+      poseScript.async = true;
 
-    pose.setOptions({
-      modelComplexity: 1,
-      smoothLandmarks: true,
-      minDetectionConfidence: 0.5,
-      minTrackingConfidence: 0.5,
-    });
+      const cameraScript = document.createElement("script");
+      cameraScript.src = "https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js";
+      cameraScript.async = true;
 
-    pose.onResults((results) => {
-      if (!results.poseLandmarks) {
-        setFeedback("No person detected");
-        return;
-      }
+      // Load both Pose and Camera scripts
+      document.body.appendChild(poseScript);
+      document.body.appendChild(cameraScript);
 
-      const canvasElement = canvasRef.current;
-      const canvasCtx = canvasElement.getContext("2d");
-
-      // Clear canvas
-      canvasCtx.clearRect(0, 0, canvasElement.width, canvasElement.height);
-
-      // Draw the arm landmarks (elbow, wrist, shoulder)
-      drawArmPose(results, canvasCtx);
-
-      // Logic to provide feedback based on exercise form
-      calculateExercise(results);
-    });
-
-    if (isCameraActive && !isPaused) {
-      if (videoRef.current) {
-        cameraInstance = new cam.Camera(videoRef.current, {
-          onFrame: async () => {
-            await pose.send({ image: videoRef.current });
-          },
-          width: 640,
-          height: 480,
+      poseScript.onload = () => {
+        const pose = new window.Pose({
+          locateFile: (file) => {
+            if (file.endsWith(".tflite")) {
+              return `https://cdn.jsdelivr.net/npm/@mediapipe/pose/${file}`;
+            }
+            if (file.endsWith(".data")) {
+              return `https://cdn.jsdelivr.net/npm/@mediapipe/pose/${file}`;
+            }
+            return `https://cdn.jsdelivr.net/npm/@mediapipe/pose/${file}`;
+          }
         });
-        cameraInstance.start();
-        setCamera(cameraInstance);
-        setFeedback("Camera started. Begin your exercise.");
 
-        // Start timer
-        timerInterval = setInterval(() => setTimer((prev) => prev + 1), 1000);
-      }
-    } else if (cameraInstance) {
-      cameraInstance.stop();
-      clearInterval(timerInterval);
+        pose.setOptions({
+          modelComplexity: 1,
+          smoothLandmarks: true,
+          minDetectionConfidence: 0.5,
+          minTrackingConfidence: 0.5,
+        });
+
+        pose.onResults((results) => {
+          if (!results.poseLandmarks) {
+            setFeedback("No person detected");
+            return;
+          }
+
+          const canvasElement = canvasRef.current;
+          const canvasCtx = canvasElement.getContext("2d");
+
+          // Clear the canvas
+          canvasCtx.clearRect(0, 0, canvasElement.width, canvasElement.height);
+
+          // Call function to draw pose landmarks (arm positions)
+          drawArmPose(results, canvasCtx);
+
+          // Process the exercise results
+          calculateExercise(results);
+        });
+
+        cameraScript.onload = () => {
+          if (isCameraActive && !isPaused) {
+            if (videoRef.current) {
+              // Now we can reference window.Camera (loaded from the script)
+              cameraInstance = new window.Camera(videoRef.current, {
+                onFrame: async () => {
+                  await pose.send({ image: videoRef.current });
+                },
+                width: 640,
+                height: 480,
+              });
+              cameraInstance.start();
+              setCamera(cameraInstance);
+              setFeedback("Camera started. Begin your exercise.");
+
+              // Start timer for exercise
+              timerInterval = setInterval(() => setTimer((prev) => prev + 1), 1000);
+            }
+          } else if (cameraInstance) {
+            cameraInstance.stop();
+            clearInterval(timerInterval);
+          }
+        };
+      };
+
+      poseScript.onerror = () => {
+        setFeedback("Failed to load Mediapipe Pose library");
+      };
+
+      cameraScript.onerror = () => {
+        setFeedback("Failed to load Mediapipe Camera library");
+      };
+    } catch (error) {
+      console.error("Error loading the Mediapipe Pose library:", error);
+      setFeedback(error?.message || "Error initializing Pose detection."); // Safe access to 'message'
     }
+  };
 
-    return () => {
-      if (cameraInstance) {
-        cameraInstance.stop();
-      }
-      clearInterval(timerInterval);
-    };
-  }, [isCameraActive, isPaused]);
+  loadPoseLibrary();
+
+  // Clean up when the component unmounts or dependencies change
+  return () => {
+    if (cameraInstance) {
+      cameraInstance.stop();
+    }
+    clearInterval(timerInterval);
+  };
+}, [isCameraActive, isPaused]); // Re-run when camera state changes
 
  
 // Move throttle outside of the function to make it persistent

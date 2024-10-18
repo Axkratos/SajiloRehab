@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useGoogleLogin } from "@react-oauth/google"; // Import Google login hook
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import bbImage from '/aa.webp';
@@ -14,6 +15,8 @@ const Signup = () => {
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
   const nodeBackendUrl = import.meta.env.VITE_API_NODE_BACKEND;
+
+  // Handle form input change
   const handleChange = (e) => {
     setFormData({
       ...formData,
@@ -21,6 +24,7 @@ const Signup = () => {
     });
   };
 
+  // Handle form submission for manual signup
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
@@ -36,6 +40,38 @@ const Signup = () => {
       setIsLoading(false);
     }
   };
+
+  // Handle Google OAuth signup flow
+  const responseGoogle = async (authResult) => {
+    try {
+      if (authResult.code) {
+        // Send the authorization code to the backend to exchange for tokens
+        const result = await axios.get(`${nodeBackendUrl}/api/v1/auth/google/callback`, {
+          params: { code: authResult.code }, // Pass the authorization code in query params
+        });
+
+        const { accessToken, refreshToken } = result.data;
+
+        // Store tokens in localStorage or sessionStorage
+        localStorage.setItem('token', accessToken);
+        localStorage.setItem('refreshToken', refreshToken);
+
+        // Redirect to dashboard or any protected page
+        navigate('/dashboard');
+      } else {
+        throw new Error('Google login failed');
+      }
+    } catch (e) {
+      console.error('Error during Google login:', e);
+    }
+  };
+
+  // Google login button handler
+  const googleLogin = useGoogleLogin({
+    onSuccess: responseGoogle,
+    onError: responseGoogle,
+    flow: "auth-code",
+  });
 
   return (
     <div className="flex items-center justify-center h-screen w-full px-5 sm:px-0">
@@ -128,9 +164,9 @@ const Signup = () => {
           </form>
 
           {/* Google Signup Button */}
-          <a
-            href="#"
-            className="flex items-center justify-center mt-4 text-white rounded-lg shadow-md hover:bg-gray-100"
+          <div
+            className="flex items-center justify-center mt-4 text-white rounded-lg shadow-md hover:bg-gray-100 cursor-pointer"
+            onClick={googleLogin}
           >
             <div className="flex px-5 justify-center w-full py-3">
               <div className="min-w-[30px]">
@@ -159,7 +195,7 @@ const Signup = () => {
                 </h1>
               </div>
             </div>
-          </a>
+          </div>
 
           {/* Login link */}
           <div className="mt-4 flex items-center w-full text-center">
