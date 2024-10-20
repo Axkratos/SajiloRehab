@@ -21,7 +21,10 @@ SajiloRehab is a physiotherapy platform that offers personalized exercise recomm
 
 ## Folder Structure
 
-/physiotherapy-website ├── /node # Node.js backend for authentication and feedback ├── /backend # Flask backend for rep counting and exercise recommendation ├── /frontend # React frontend
+/sajilorehab
+ ├── /node # Node.js backend for authentication and feedback 
+ ├── /backend # Flask backend for rep counting and exercise recommendation 
+ ├── /frontend # React frontend
 
 
 ## Installation
@@ -40,10 +43,14 @@ Navigate to the Node.js backend directory:
 
 ```bash
 cd node
-Install dependencies:
-npm install
-Create a .env file in the node directory with the following values:
 
+```
+Install dependencies:
+```bash
+npm install
+```
+Create a .env file in the node directory with the following values:
+```bash
 CORS_ORIGIN=*
 MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/dbname
 PORT=8000
@@ -54,22 +61,28 @@ JWT_REFRESH_EXPIRES_IN=90d
 GOOGLE_CLIENT_ID=your_google_client_id
 GOOGLE_CLIENT_SECRET=your_google_client_secret
 
-bash```
+```
 
 Start the Node.js server:
+```bash
 npm run dev
+```
 
 The Node.js server will run at http://localhost:8000.
 
 2. Flask Backend (Rep Counting and Exercise Recommendation)
 Navigate to the Flask backend directory:
-
+```bash
 cd backend
+```
 Install Python dependencies:
+```bash
 pip install -r requirements.txt
+```
 Start the Flask backend:
 
 ```bash
 python app.py
+```
 
 The Flask backend will run at http://localhost:5000.
