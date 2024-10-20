@@ -22,9 +22,9 @@ SajiloRehab is a physiotherapy platform that offers personalized exercise recomm
 ## Folder Structure
 
 /sajilorehab
- ├── /node # Node.js backend for authentication and feedback 
- ├── /backend # Flask backend for rep counting and  exercise recommendation 
- ├── /frontend # React frontend
+ ├── /node # Node.js backend for authentication and feedback| 
+ ├── /backend # Flask backend for rep counting and  exercise recommendation|
+ ├── /frontend # React frontend|
 
 
 ## Installation
