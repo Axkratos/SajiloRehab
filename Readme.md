@@ -20,7 +20,7 @@ SajiloRehab is a physiotherapy platform that offers personalized exercise recomm
 - **Authentication**: Google OAuth and JWT-based authentication.
 - **OpenAI**: I have used openai using a package named G4F. So, no need for any external API Key.
 
-## API Used
+## External APIs Used
 - **Google OAuth 2.0**: Used for user authentication, allowing sign-in via Google accounts.
 - **GPT-3.5 Turbo (g4f)**: Custom implementation of GPT-3.5 for exercise suggestions and feedback, utilizing the open-source g4f package.
 
