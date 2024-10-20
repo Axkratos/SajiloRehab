@@ -18,6 +18,7 @@ SajiloRehab is a physiotherapy platform that offers personalized exercise recomm
   - **Flask**: Handles exercise recommendations and rep counting using GPT-3.5 Turbo, MediaPipe, and OpenCV.
 - **Database**: MongoDB (Atlas or local)
 - **Authentication**: Google OAuth and JWT-based authentication.
+- **OpenAI**: I have used openai using a package named G4F. So, no need for any external API Key.
 
 ## Folder Structure
 
