@@ -26,11 +26,22 @@ SajiloRehab is a physiotherapy platform that offers personalized exercise recomm
 
 ## Folder Structure
 
+```bash
 /sajilorehab
- ├── /node # Node.js backend for authentication and feedback| 
- ├── /backend # Flask backend for rep counting and  exercise recommendation|
- ├── /frontend # React frontend|
+├── /node       # Node.js backend for authentication and feedback
+├── /backend    # Flask backend for rep counting and exercise recommendation
+└── /frontend   # React frontend
+```
 
+### Clone the Repository
+First, clone the repository from GitHub to your local machine.
+```bash
+git clone https://github.com/Axkratos/SajiloRehab.git
+```
+### Navigate into the project directory
+```bash
+cd SajiloRehab
+```
 
 ## Installation
 
@@ -48,7 +59,6 @@ Navigate to the Node.js backend directory:
 
 ```bash
 cd node
-
 ```
 Install dependencies:
 ```bash
@@ -116,6 +126,9 @@ npm run dev
 The frontend will be accessible at http://localhost:5173
 
 ## Running the Project
+
+
+
 1. Start the Node.js backend for authentication and feedback:
 ```bash
 
@@ -135,9 +148,9 @@ npm run dev
 ```
 
 ## System Architecture
-React Frontend: Manages user authentication, exercise selection, and progress tracking.
-Node.js Backend: Handles authentication and provides real-time feedback based on users body angles using GPT-3.5 Turbo.
-Flask Backend: Provides personalized exercise recommendations and rep counting with OpenCV and MediaPipe.
+- **React Frontend**: Manages user authentication, exercise selection, and progress tracking.
+- **Node.js Backend**: Handles authentication and provides real-time feedback based on users body angles using GPT-3.5 Turbo.
+- **Flask Backend**: Provides personalized exercise recommendations and rep counting with OpenCV and MediaPipe.
 
 ## Environment Variables
 ### React Frontend (.env)
