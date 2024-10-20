@@ -54,6 +54,8 @@ JWT_REFRESH_EXPIRES_IN=90d
 GOOGLE_CLIENT_ID=your_google_client_id
 GOOGLE_CLIENT_SECRET=your_google_client_secret
 
+bash```
+
 Start the Node.js server:
 npm run dev
 
