@@ -58,7 +58,7 @@ const LoginWithGoogleButton = () => {
         localStorage.setItem('refreshToken', refreshToken);
 
         // Redirect to dashboard or any protected page
-        navigate('/dashboard');
+        navigate('/chat');
       } else {
         throw new Error('Google login failed');
       }

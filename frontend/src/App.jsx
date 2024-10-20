@@ -11,7 +11,7 @@ import NotFound from './components/notFound';
 import Exercise from './components/ExerciseCard'; // Direct import
 import Bicep from './Exercises/bicep/bicep'; // Direct import
 import About from './components/about'; // Direct import
-import Test from './test.jsx'
+
 import { GoogleOAuthProvider } from '@react-oauth/google';
 
 const App = () => {
@@ -31,7 +31,7 @@ const App = () => {
           <Route path="/exercise" element={<Exercise />} />
           <Route path="/price" element={<Pricing />} />
           <Route path="/about" element={<About />} />
-          <Route path="/test" element={<Test />} />
+          
           <Route path="/exercise/bicep-curls" element={<Bicep />} />
         </Routes>
       </Router>

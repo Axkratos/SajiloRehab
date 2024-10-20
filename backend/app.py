@@ -69,8 +69,8 @@ def suggest_exercises():
         # Prepare the prompt to recommend exactly 4 exercises with descriptions
         prompt = (
             "You are a physiotherapy assistant. The user has reported the following injury: "
-            f"'{user_message}'. Based on this injury, recommend exactly one to four suitable available physiotherapy exercises from the following list: "
-            f"{', '.join(exercise_details.keys())}. Please list the exercises along with their descriptions in the format: "
+            f"'{user_message}'. Based on this injury, recommend exactly two to four suitable available(if suitable exercises in below list recommend 4) physiotherapy exercises from the following list: "
+            f"{', '.join(exercise_details.keys())}. Please list the exercises along with descriptions in the format: "
             "'exercise name': 'description'. Please ensure that the exercise names are presented without numbering and dont write any other things like I recommend as it goes against my backend model."
         )
 
