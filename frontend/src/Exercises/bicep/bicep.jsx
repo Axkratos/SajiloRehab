@@ -25,6 +25,7 @@ const nodeBackendUrl = import.meta.env.VITE_API_NODE_BACKEND;
 // Using the Python backend URL
 const pythonBackendUrl = import.meta.env.VITE_API_PYTHON_BACKEND;
 
+const feedPyhton="https://feedback-64zm.onrender.com"
 useEffect(() => {
   let cameraInstance;
   let timerInterval;
@@ -196,8 +197,11 @@ const calculateExercise = async (results) => {
 
   const sendFeedbackData = async (angleData) => {
     try {
-      const response = await axios.post(`${nodeBackendUrl}/api/get_feedback`, angleData);
-      setFeedback(response.data.feedback);
+      console.log(angleData)
+      const response = await axios.post(`${feedPyhton}/api/get_feedback`, angleData);
+      console.log(angleData); // Log the angle data and feedback
+      setFeedback(response.data);
+      console.log(response.data)
     } catch (error) {
       console.error('Error sending feedback data:', error);
     }
@@ -209,6 +213,7 @@ const calculateExercise = async (results) => {
         angle: currentAngle,  // Send the angle for counting reps
       });
       setRepCount(response.data.reps); // Update rep count from response
+      
     } catch (error) {
       console.error('Error sending rep data:', error);
     }

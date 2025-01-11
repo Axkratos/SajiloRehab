@@ -164,6 +164,7 @@ async function generate_feedback(angle_history) {
 // API endpoint for generating feedback
 app.post("/api/get_feedback", async (req, res) => {
   const data = req.body;
+  print(data)
 
   // Validate the incoming data
   if (!data || typeof data.leftShoulderAngle !== 'number' || typeof data.rightShoulderAngle !== 'number' || 
