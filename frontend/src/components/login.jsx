@@ -30,9 +30,12 @@ const LoginWithGoogleButton = () => {
     try {
       // Use the environment variable for the backend URL
       const response = await axios.post(`${nodeBackendUrl}/api/v1/auth/login`, formData);
+      
       if (response.data.status === 'success') {
         localStorage.setItem('token', response.data.token);
+        
         localStorage.setItem('refreshToken', response.data.refreshToken);
+        localStorage.setItem('email', formData.email); // Save email in localStorage
         navigate('/chat');
       }
     } catch (err) {

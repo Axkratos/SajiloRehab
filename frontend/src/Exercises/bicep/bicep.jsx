@@ -2,9 +2,11 @@ import React, { useRef, useState, useEffect } from "react";
 import { Pose } from "@mediapipe/pose";
 import * as cam from "@mediapipe/camera_utils";
 import axios from 'axios';
-import { Container, Typography, Box, Button, Grid, Card, CardMedia, Paper, CardContent } from "@mui/material";
+import { Container, Typography, Box, Button, Grid, Card, CardMedia, Paper, CardContent,Modal } from "@mui/material";
 import bicep from "/bicep.mp4";
 import throttle from 'lodash.throttle';
+import { use } from "react";
+import { set } from "lodash";
 
 const ExercisePose = () => {
   const videoRef = useRef(null);
@@ -17,15 +19,16 @@ const ExercisePose = () => {
   const [repCount, setRepCount] = useState(0);
   const [lastFeedbackTime, setLastFeedbackTime] = useState(0); // To track last feedback time
   const lastFeedbackTimeRef = useRef(Date.now()); // Using ref instead of state
-
-
+  const [isModalOpen, setIsModalOpen] = useState(false); // Modal visibility state
+  const [progressData, setProgressData] = useState({}); // Data to show in the modal
   // Using the Node.js backend URL
 const nodeBackendUrl = import.meta.env.VITE_API_NODE_BACKEND;
 
 // Using the Python backend URL
 const pythonBackendUrl = import.meta.env.VITE_API_PYTHON_BACKEND;
 
-const feedPyhton="https://feedback-64zm.onrender.com"
+// const feedPyhton="https://feedback-64zm.onrender.com"
+const feedPyhton="http://localhost:3000"
 useEffect(() => {
   let cameraInstance;
   let timerInterval;
@@ -199,8 +202,9 @@ const calculateExercise = async (results) => {
     try {
       console.log(angleData)
       const response = await axios.post(`${feedPyhton}/api/get_feedback`, angleData);
-      console.log(angleData); // Log the angle data and feedback
+      
       setFeedback(response.data);
+      // setFeedback("Feedback sent successfully");
       console.log(response.data)
     } catch (error) {
       console.error('Error sending feedback data:', error);
@@ -287,13 +291,29 @@ const calculateExercise = async (results) => {
   
     // Hit the stop API to stop the rep counter and reset the counter
     try {
-      const response = await axios.post(`${pythonBackendUrl}/api/stop`);
-      console.log(response.data.message); // Log the message from the API response
+      const response1 = await axios.post(`${pythonBackendUrl}/api/stop`);
+      const userEmail = localStorage.getItem("email"); // Assuming email is stored in localStorage
+      console.log(userEmail)
+      const response = await axios.post("http://localhost:8000/api/v1/progress/update", {
+        userEmail:userEmail,
+        exerciseType: "Bicep Curls",
+        repsToday: repCount,
+        timeToday: timer,
+      });
+
+      // Set progress data and show modal
+      setProgressData({
+        repsToday: repCount,
+        timeToday: timer,
+      });
+      setIsModalOpen(true);
     } catch (error) {
       console.error('Error stopping the rep counter:', error);
     }
   };
-  
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+  };
   const handlePauseCamera = async () => {
     const newPauseState = !isPaused;
     setIsPaused(newPauseState);
@@ -330,7 +350,19 @@ const calculateExercise = async (results) => {
             <canvas ref={canvasRef} width="640" height="480" style={{ position: "absolute", zIndex: 2 }} />
           </Box>
         </Grid>
-
+{/* Modal for today's progress */}
+<Modal open={isModalOpen} onClose={handleCloseModal}>
+        <Box sx={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)", width: 400, bgcolor: "white", p: 4, boxShadow: 24, borderRadius: 2 }}>
+          <Typography variant="h6">Today's Progress</Typography>
+          <Typography>Exercise Name: Bicep Curls</Typography>
+          <Typography>Difficulty: Easy</Typography>
+          <Typography>Reps Completed: {progressData.repsToday}</Typography>
+          <Typography>Duration: {progressData.timeToday} seconds</Typography>
+          <Button variant="contained" onClick={handleCloseModal} sx={{ mt: 2 }}>
+            Close
+          </Button>
+        </Box>
+      </Modal>
         {/* Right side: Recommended card and tutorial video */}
         <Grid item xs={5}>
           {/* Recommended Card */}
