@@ -23,6 +23,7 @@ import {
     Legend,
 } from 'chart.js';
 
+
 ChartJS.register(
     CategoryScale,
     LinearScale,
@@ -37,6 +38,7 @@ const Dashboard = () => {
     const [selectedExercise, setSelectedExercise] = useState(null);
     const [open, setOpen] = useState(false);
     const [userName, setUserName] = useState('');
+    const [progressData, setProgressData] = useState(null); // To store progress data
     const [timeData, setTimeData] = useState({
         labels: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
         datasets: [
@@ -57,6 +59,7 @@ const nodeBackendUrl = import.meta.env.VITE_API_NODE_BACKEND;
     useEffect(() => {
         const fetchUserData = async () => {
             const token = localStorage.getItem('token');
+            const userEmail = localStorage.getItem('email');
             try {
                 const profileRes = await axios.get(`${nodeBackendUrl}/api/v1/users/profile`, {
                     headers: { Authorization: `Bearer ${token}` },
@@ -70,6 +73,14 @@ const nodeBackendUrl = import.meta.env.VITE_API_NODE_BACKEND;
                 });
                 if (exercisesRes.data && exercisesRes.data.exercises) {
                     setExercisesData(exercisesRes.data.exercises);
+                }
+
+                // Fetching progress data using the email from localStorage
+                if (userEmail) {
+                    const progressRes = await axios.get(`${nodeBackendUrl}/api/v1/progress/${userEmail}`);
+                    if (progressRes.data && progressRes.data.progress) {
+                        setProgressData(progressRes.data.progress[0]); // Assuming there's only one progress object
+                    }
                 }
             } catch (error) {
                 console.error('Failed to fetch data:', error);
@@ -121,15 +132,24 @@ const nodeBackendUrl = import.meta.env.VITE_API_NODE_BACKEND;
                         Progress Summary
                     </Typography>
                     <div className="text-gray-400">
-                        <Typography variant="body1" className="mb-4">
-                            <strong>Total Sessions:</strong> 12
-                        </Typography>
-                        <Typography variant="body1" className="mb-4">
-                            <strong>Average Session Time:</strong> 2.5 hours
-                        </Typography>
-                        <Typography variant="body1" className="mb-4">
-                            <strong>Last Activity:</strong> 2 days ago
-                        </Typography>
+                        {progressData ? (
+                            <>
+                                <Typography variant="body1" className="mb-4">
+                                    <strong>Total Reps:</strong> {progressData.totalReps}
+                                </Typography>
+                                <Typography variant="body1" className="mb-4">
+  <strong>Total Time Spent:</strong> {(progressData.totalTime / 60).toFixed(2)} minutes
+</Typography>
+
+                                <Typography variant="body1" className="mb-4">
+                                    <strong>Last Activity:</strong> {new Date(progressData.date).toLocaleDateString()}
+                                </Typography>
+                            </>
+                        ) : (
+                            <Typography variant="body1" className="text-gray-400">
+                                Loading progress data...
+                            </Typography>
+                        )}
                         <Button
                             variant="contained"
                             className="bg-orange-500 hover:bg-orange-600 mt-4"

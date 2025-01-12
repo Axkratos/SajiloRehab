@@ -40,7 +40,7 @@ export const updateExerciseProgress = async (req, res) => {
 
 export const getExerciseProgress = async (req, res) => {
     const { userEmail } = req.params;
-    console.log(userEmail)
+   
   
     if (!userEmail) {
       return res.status(400).json({ message: 'User email is required' });
